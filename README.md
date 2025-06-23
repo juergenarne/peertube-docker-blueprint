@@ -101,6 +101,8 @@ NODE_ENV=production npm run create-user
 
 - master // the master branch always contains the latest version of the application
 - unofficial // the unofficial branch contains the approach to make the unofficial repo version of peertube run on any random ubuntu serv er with docker and nvm installed.
+- develop // always the latest shit but not always stable, so take care...
+- recommended // Coming soon. We will take it from here: [Production Guide](https://docs.joinpeertube.org/install/any-os)
 
 ## Disclaimer
 
