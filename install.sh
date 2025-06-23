@@ -8,19 +8,9 @@ cd src
 git checkout master
 git pull
 
-nvm install --lts
-nvm use --lts
-
-npm i
-npm i -g npm 
-npm i -g yarn
-npm i
-
-yarn install --pure-lockfile
-
-cd config
-cp production.yaml.example production.yaml
-cd -
+cp config/production.yaml.example config/production.yaml
+mv config/default.yaml config/default.yaml.example
+ln -s config/production.yaml config/default.yaml
 
 echo "Peertube ready for configuaration"
 echo "To edit your production config file: "
@@ -28,4 +18,3 @@ echo "vi config/production.yaml"
 echo "Use "
 openssl rand -hex 32
 echo "as a peertube secret key"
-echo "After adjusting your 'production.yaml' file according to your needs execute the startup.sh file"

@@ -2,6 +2,35 @@
 
 Install your own instance of Peertube on your server
 
+git clone <https://github.com/juergenarne/peertube-docker-blueprint.git> peertube
+cd peertube
+docker compose up -d --build
+chmod 0775 install.sh
+./install.sh
+
+configre by editing
+
+```bash
+nvm install --lts
+nvm use --lts
+
+npm i
+npm i -g npm 
+npm i -g yarn
+npm i
+
+yarn install --pure-lockfile
+
+cd config
+cp production.yaml.example production.yaml
+cd -
+````
+
+---
+
+old stuff
+
+---
 
 Lösung B: In default.yaml echten Hostnamen/IP angeben
 
