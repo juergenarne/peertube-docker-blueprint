@@ -28,6 +28,4 @@ echo "vi config/production.yaml"
 echo "Use "
 openssl rand -hex 32
 echo "as a peertube secret key"
-echo "After adjusting your 'production.yaml' file according to your needs: "
-echo "npm run build"
-echo "nohup npm run start -- --port 9000 > logs/peertube-server.log 2>&1 &"
+echo "After adjusting your 'production.yaml' file according to your needs execute the startup.sh file"
