@@ -81,7 +81,7 @@ mkdir logs
 nohup npm run start > logs/peertube.log 2>&1 &
 ````
 
-To be able to call your application over the web you need to use an nginx proxy to redirect your url to `127.0.0.1:9000` or whatever port you have set in the config file. 
+To be able to call your application over the web you need to use an nginx proxy to redirect your url to `127.0.0.1:9000` or whatever port you have set in the config file.
 
 10. To stop the application for reconfiguration or ppdate you can do
 
@@ -98,5 +98,14 @@ NODE_ENV=production npm run create-user
 ````
 
 ## Branches
+
 - master // the master branch always contains the latest version of the application
 - unofficial // the unofficial branch contains the approach to make the unofficial repo version of peertube run on any random ubuntu serv er with docker and nvm installed.
+
+## Disclaimer
+
+Please keep in mind that this repo is only provding the code for the requested Docker enviornment. The official source code for Peertube is cloned from the official (unofficial) PeerTube repo `https://github.com/Chocobozzz/PeerTube.git`.
+
+See also: <https://docs.joinpeertube.org/install/unofficial>
+
+Enjoy!
