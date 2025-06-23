@@ -4,8 +4,8 @@ su www-data
 
 docker compose up -d --build
 
-git clone https://github.com/Chocobozzz/PeerTube.git peertube
-cd peertube
+git clone https://github.com/Chocobozzz/PeerTube.git src
+cd src
 
 git checkout master
 git pull
