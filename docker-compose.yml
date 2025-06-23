@@ -2,6 +2,7 @@ services:
   postgres:
     image: postgres:16
     restart: always
+    container_name: ${APP_KEY}-postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -14,6 +15,7 @@ services:
   redis:
     image: redis:7-alpine
     restart: always
+    container_name: ${APP_KEY}-redis
     ports:
       - ${REDIS_PORT}:6379
     command: ["redis-server", "--appendonly", "yes"]
