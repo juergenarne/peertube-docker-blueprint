@@ -21,11 +21,13 @@ yarn install --pure-lockfile
 cd config
 cp production.yaml.example production.yaml
 cd -
-# npm run build
 
-# nohup npm run start -- --port 9000 > /var/www/peertube/peertube-server.log 2>&1 &
-
-echo "Peertube ready for configuaration"  
+echo "Peertube ready for configuaration"
+echo "To edit your production config file: "
+echo "vi config/production.yaml"
+echo "Use "
+openssl rand -hex 32
+echo "as a peertube secret key"
 echo "After adjusting your 'production.yaml' file according to your needs: "
-echo ">npm run build"
+echo "npm run build"
 echo "nohup npm run start -- --port 9000 > logs/peertube-server.log 2>&1 &"
