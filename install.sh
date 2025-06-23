@@ -1,16 +1,18 @@
 #!/bin/bash
 
-docker compose up -d --build
-
 git clone https://github.com/Chocobozzz/PeerTube.git src
 cd src
 
 git checkout master
 git pull
 
-cp config/production.yaml.example config/production.yaml
-mv config/default.yaml config/default.yaml.example
-ln -s config/production.yaml config/default.yaml
+cd config
+
+cp production.yaml.example production.yaml
+mv default.yaml default.yaml.example
+ln -s production.yaml default.yaml
+
+cd -
 
 echo "Peertube ready for configuaration"
 echo "To edit your production config file: "

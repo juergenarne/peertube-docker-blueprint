@@ -1,14 +1,60 @@
-# Peertube Docker Blueprint
+# Peertube Docker Setup
 
-Install your own instance of Peertube on your server
+Install your own instance of Peertube on your server using Docker PostgreSQL Redis and Node.js
 
-git clone <https://github.com/juergenarne/peertube-docker-blueprint.git> peertube
-cd peertube
+```bash
+cd /some/docker/sub/dir
+````
+
+1. Clone this repo from github.com (free)
+
+```bash
+git clone https://github.com/juergenarne/peertube-docker-blueprint.git .
+`````
+
+2. Modify your .env file
+
+```bash
+vi .env
+````
+
+set the variables for
+
+APP_KEY
+APP_NAME
+POSTGRES_USER
+POSTGRES_PASSWORD
+POSTGRES_DB
+REDIS_PORT
+
+to a safe and conveniant value
+
+To generate a safe password use:
+
+./password.sh
+
+3. Start the enviornment
+
+```bash
 docker compose up -d --build
-chmod 0775 install.sh
-./install.sh
+````
 
-configre by editing
+4. Clone the latest code from github and make some changes
+
+```bash
+chmod 0775 install.sh # optional
+./install.sh
+````
+
+5. Find out the internal ips of your contrainers for the configuration:
+
+```bash
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ptb-postgres
+````
+
+6. Configre by editing the `config/default.yaml` file.
+
+7. After finishing the configuration make sure you run the latest node.js composnents
 
 ```bash
 nvm install --lts
@@ -20,186 +66,37 @@ npm i -g yarn
 npm i
 
 yarn install --pure-lockfile
-
-cd config
-cp production.yaml.example production.yaml
-cd -
 ````
 
----
-
-old stuff
-
----
-
-Lösung B: In default.yaml echten Hostnamen/IP angeben
-
-Da PeerTube auf dem Host läuft, brauchst du die IP des Docker-Containers, z. B.:
-
-docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' git-postgres-1
-
-Beispielausgabe: 172.18.0.2
-
-Dann in deiner config/default.yaml:
-
-database:
-  hostname: '172.18.0.2'  # oder was immer das inspect ergibt
-  port: 5432
-  ...
-
-⚠️ Aber: Diese IP kann sich beim Neustart ändern → nicht dauerhaft stabil.
-
-Klar! Hier ist ein vollständiges Setup, um **PeerTube, PostgreSQL und Redis** gemeinsam in Docker laufen zu lassen, sauber konfiguriert mit:
-
-* `docker-compose.yml`
-* `.env` für konfigurierbare Secrets
-* `Dockerfile` für PeerTube
-
----
-
-## 📁 1. `.env` (Umgebungsvariablen)
-
-```dotenv
-PEERTUBE_DB_USER=peertube
-PEERTUBE_DB_PASSWORD=secretpassword
-PEERTUBE_DB_NAME=peertube_db
-PEERTUBE_REDIS_HOST=redis
-PEERTUBE_POSTGRES_HOST=postgres
-PEERTUBE_SMTP_DISABLED=true
-```
-
----
-
-## 📄 2. `docker-compose.yml`
-
-```yaml
-version: '3.8'
-
-services:
-  postgres:
-    image: postgres:16
-    restart: always
-    environment:
-      POSTGRES_USER: ${PEERTUBE_DB_USER}
-      POSTGRES_PASSWORD: ${PEERTUBE_DB_PASSWORD}
-      POSTGRES_DB: ${PEERTUBE_DB_NAME}
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    networks:
-      - peertube-net
-
-  redis:
-    image: redis:7-alpine
-    restart: always
-    networks:
-      - peertube-net
-
-  peertube:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    depends_on:
-      - postgres
-      - redis
-    ports:
-      - "9000:9000"
-    environment:
-      PEERTUBE_DB_HOSTNAME: ${PEERTUBE_POSTGRES_HOST}
-      PEERTUBE_DB_USERNAME: ${PEERTUBE_DB_USER}
-      PEERTUBE_DB_PASSWORD: ${PEERTUBE_DB_PASSWORD}
-      PEERTUBE_DB_NAME: ${PEERTUBE_DB_NAME}
-      PEERTUBE_REDIS_HOSTNAME: ${PEERTUBE_REDIS_HOST}
-    volumes:
-      - ./config:/app/config
-      - ./storage:/app/storage
-      - ./logs:/app/logs
-    networks:
-      - peertube-net
-
-volumes:
-  pgdata:
-
-networks:
-  peertube-net:
-```
-
----
-
-## 🐳 3. `Dockerfile` (PeerTube)
-
-```dockerfile
-FROM node:18-bullseye
-
-# Install dependencies
-RUN apt-get update && apt-get install -y \
-    ffmpeg \
-    git \
-    python3 \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
-# Create app directory
-WORKDIR /app
-
-# Copy source code
-COPY . .
-
-# Install Node dependencies
-RUN npm ci
-
-# Build frontend and backend
-RUN npm run build
-
-# Expose PeerTube port
-EXPOSE 9000
-
-# Start PeerTube
-CMD [ "npm", "run", "start" ]
-```
-
----
-
-## 📁 4. `config/default.yaml` (optional Beispiel für PeerTube-Konfig)
-
-Diese Datei kannst du bei `./config/default.yaml` speichern (wird über Volume gemountet):
-
-```yaml
-database:
-  hostname: '${PEERTUBE_DB_HOSTNAME}'
-  port: 5432
-  username: '${PEERTUBE_DB_USERNAME}'
-  password: '${PEERTUBE_DB_PASSWORD}'
-  name: '${PEERTUBE_DB_NAME}'
-  ssl: false
-
-redis:
-  hostname: '${PEERTUBE_REDIS_HOSTNAME}'
-  port: 6379
-
-webserver:
-  https: false
-  hostname: 'localhost'
-  port: 9000
-
-smtp:
-  enabled: false
-```
-
----
-
-## 🚀 Starten
+8. Build the application
 
 ```bash
-docker compose up --build
-```
+npm run build
+````
 
----
+9. Start the application
 
-## 🔧 Hinweise
+```bash
+mkdir logs
+nohup npm run start > logs/peertube.log 2>&1 &
+````
 
-* Wenn du HTTPS, SMTP oder E-Mail willst, musst du `config/default.yaml` entsprechend erweitern.
-* PeerTube nutzt viel Storage für Videos – bedenke das bei `./storage`.
+To be able to call your application over the web you need to use an nginx proxy to redirect your url to `127.0.0.1:9000` or whatever port you have set in the config file. 
 
----
+10. To stop the application for reconfiguration or ppdate you can do
 
-Möchtest du, dass ich dir ein GitHub-Repo daraus baue (oder ZIP-Ordner)?
+```bash
+kill $(pgrep -f 'node dist/server') 
+````
+
+... and start over from nr. 9 ...
+
+11. To create a user
+
+```bash
+NODE_ENV=production npm run create-user
+````
+
+## Branches
+- master // the master branch always contains the latest version of the application
+- unofficial // the unofficial branch contains the approach to make the unofficial repo version of peertube run on any random ubuntu serv er with docker and nvm installed.
