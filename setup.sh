@@ -1,7 +1,5 @@
 #!/bin/bash
 
-su www-data
-
 docker compose up -d --build
 
 git clone https://github.com/Chocobozzz/PeerTube.git src
