@@ -26,6 +26,6 @@ cd -
 # nohup npm run start -- --port 9000 > /var/www/peertube/peertube-server.log 2>&1 &
 
 echo "Peertube ready for configuaration"  
-echo "After adjusting your `production.yaml` according to your needs: "
+echo "After adjusting your 'production.yaml' file according to your needs: "
 echo ">npm run build"
 echo "nohup npm run start -- --port 9000 > logs/peertube-server.log 2>&1 &"
