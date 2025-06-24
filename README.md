@@ -91,12 +91,6 @@ kill $(pgrep -f 'node dist/server')
 
 ... and start over from nr. 9 ...
 
-11. To create a user
-
-```bash
-NODE_ENV=production npm run create-user
-````
-
 ## Branches
 
 - master // the master branch always contains the latest version of the application
