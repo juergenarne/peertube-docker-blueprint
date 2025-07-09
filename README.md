@@ -39,22 +39,29 @@ To generate a safe password use:
 docker compose up -d --build
 ````
 
-4. Clone the latest code from github and make some changes
+4. Make sure you have latest version of node 20 installed and active
+
+```bash
+nvm install 20
+nvm use 20
+````
+
+5. Clone the latest code from github and make some changes
 
 ```bash
 chmod 0775 install.sh # optional
 ./install.sh
 ````
 
-5. Find out the internal ips of your contrainers for the configuration:
+6. Find out the internal ips of your contrainers for the configuration:
 
 ```bash
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ptb-postgres
 ````
 
-6. Configre by editing the `config/default.yaml` file.
+7. Configre by editing the `config/default.yaml` file.
 
-7. After finishing the configuration make sure you run the latest node.js composnents
+8. After finishing the configuration make sure you run the latest node.js composnents
 
 ```bash
 nvm install --lts
@@ -68,13 +75,13 @@ npm i
 yarn install --pure-lockfile
 ````
 
-8. Build the application
+9. Build the application
 
 ```bash
 npm run build
 ````
 
-9. Start the application
+10. Start the application
 
 ```bash
 mkdir logs
@@ -83,7 +90,7 @@ nohup npm run start > logs/peertube.log 2>&1 &
 
 To be able to call your application over the web you need to use an nginx proxy to redirect your url to `127.0.0.1:9000` or whatever port you have set in the config file.
 
-10. To stop the application for reconfiguration or ppdate you can do
+11. To stop the application for reconfiguration or ppdate you can do
 
 ```bash
 kill $(pgrep -f 'node dist/server') 
