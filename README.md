@@ -64,8 +64,8 @@ docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ptb
 8. After finishing the configuration make sure you run the latest node.js composnents
 
 ```bash
-nvm install --lts
-nvm use --lts
+nvm install 20 # optional
+nvm use 20 # optional
 
 npm i
 npm i -g npm 
