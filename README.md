@@ -64,14 +64,12 @@ docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ptb
 8. After finishing the configuration make sure you run the latest node.js composnents
 
 ```bash
-nvm install 20 # optional
-nvm use 20 # optional
-
-npm i
-npm i -g npm 
+nvm install 18 # optional
+nvm use 18 # optional
+npm install chai@4.3.7
 npm i -g yarn
+npm i -g npm 
 npm i
-
 yarn install --pure-lockfile
 ````
 
