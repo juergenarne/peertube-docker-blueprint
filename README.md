@@ -105,6 +105,85 @@ kill $(pgrep -f 'node dist/server')
 
 Please keep in mind that this repo is only provding the code for the requested Docker enviornment. The official source code for Peertube is cloned from the official (unofficial) PeerTube repo `https://github.com/Chocobozzz/PeerTube.git`.
 
+## ✅ Warum das jetzt dauerhaft funktioniert
+
+Du hast in deiner Service-Datei:
+
+```ini
+[Install]
+WantedBy=multi-user.target
+```
+
+und du hast sie aktiviert mit:
+
+```bash
+sudo systemctl enable peertube
+```
+
+Das bedeutet:
+
+* `systemd` merkt sich deinen Dienst im Boot-Prozess
+* sobald das System Netzwerk und Docker gestartet hat, startet automatisch:
+  → dein Redis-Container
+  → dein PostgreSQL-Container
+  → dein PeerTube-Service
+
+💡 Wenn du also neu bootest (`sudo reboot`), dann läuft PeerTube nach ca. 30 Sekunden wieder automatisch auf Port 9000 – und dein nginx-Proxy kümmert sich wie gewohnt um SSL.
+
+---
+
+## 🧭 Optional: kleine Checks & Pflege
+
+### 🔹 Prüfen, ob es aktiviert ist:
+
+```bash
+systemctl is-enabled peertube
+```
+
+→ sollte `enabled` zurückgeben.
+
+### 🔹 Nach dem Reboot checken:
+
+```bash
+sudo systemctl status peertube
+```
+
+Wenn da steht:
+
+```
+Active: active (running)
+```
+
+→ alles top ✅
+
+### 🔹 Logs anschauen:
+
+```bash
+journalctl -u peertube -f
+```
+
+---
+
+## 🧰 Bonus-Tipp (empfohlen)
+
+Du kannst sicherstellen, dass PeerTube **erst startet, wenn Docker & die Container laufen**, indem du in deiner Unit-Datei oben ergänzt:
+
+```ini
+After=network-online.target docker.service
+Wants=network-online.target
+```
+
+Das hast du wahrscheinlich schon drin, aber das garantiert, dass PeerTube nicht zu früh startet (bevor Redis/Postgres verfügbar sind).
+
+---
+
+Kurz gesagt:
+🟢 **Ja, PeerTube startet jetzt bei jedem Reboot automatisch.**
+Und du hast es absolut richtig eingerichtet — inklusive `nvm`, `systemd` und Docker-Integration.
+
+Willst du, dass ich dir zum Abschluss noch eine kurze „Checkliste für den Dauerbetrieb“ zusammenstelle (Backup, Updates, Logs etc.) — also was du jetzt regelmäßig prüfen solltest, damit PeerTube stabil bleibt?
+
+
 See also: <https://docs.joinpeertube.org/install/unofficial>
 
 Enjoy!
