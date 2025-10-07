@@ -16,7 +16,7 @@ cd -
 
 echo "Peertube ready for configuaration"
 echo "To edit your production config file: "
-echo "vi config/production.yaml"
+echo "vi src/config/production.yaml"
 echo "Use "
 openssl rand -hex 32
 echo "as a peertube secret key"
