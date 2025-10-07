@@ -1,0 +1,42 @@
+[Unit]
+Description=PeerTube Video Platform (nvm)
+After=network-online.target docker.service postgresql.service redis.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/var/www/htdocs/bewegte-bilder.berlin/peertube/src
+
+# ✨ Wichtig: nvm-Umgebung manuell setzen
+Environment=HOME=/root
+Environment=NVM_DIR=/root/.nvm
+Environment=NODE_VERSION=v20.19.5
+Environment=PATH=/root/.nvm/versions/node/v20.19.5/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# ✨ PeerTube direkt starten
+ExecStart=/root/.nvm/versions/node/v20.19.5/bin/node /var/www/htdocs/bewegte-bilder.berlin/peertube/src/dist/server
+
+# ✨ Neustart bei Crashs
+Restart=always
+RestartSec=10
+
+# ✨ Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=peertube
+
+# ✨ Umgebung
+Environment=NODE_ENV=production
+Environment=PEERTUBE_DB_HOST=127.0.0.1
+Environment=PEERTUBE_DB_PORT=5432
+Environment=PEERTUBE_DB_USERNAME=peertube
+Environment=PEERTUBE_DB_PASSWORD=password
+Environment=PEERTUBE_DB_NAME=peertube
+Environment=PEERTUBE_REDIS_HOST=127.0.0.1
+Environment=PEERTUBE_REDIS_PORT=6374
+Environment=PEERTUBE_WEBSERVER_HOSTNAME=bewegte-bilder.berlin
+Environment=PEERTUBE_WEBSERVER_PORT=9000
+
+[Install]
+WantedBy=multi-user.target
